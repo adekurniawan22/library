@@ -7,9 +7,6 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Books Data</h1>
-        <div>
-            <a href="<?= base_url('book/add') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Add Book</a>
-        </div>
     </div>
 
     <div class="row">
@@ -30,7 +27,6 @@
                                     <th class="text-center">Publication Year</th>
                                     <th class="text-center">Pages</th>
                                     <th class="text-center">Stock</th>
-                                    <th class="text-center" data-sortable="false">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -42,11 +38,6 @@
                                         <td class="text-center"><?= $book['book_publication_year'] ?></td>
                                         <td class="text-center"><?= $book['book_pages'] ?></td>
                                         <td class="text-center"><?= $book['book_stock'] ?></td>
-                                        <td class="text-center">
-                                            <a class="btn btn-primary" href="<?= base_url("book/edit/{$book['book_id']}") ?>">Edit</a>
-                                            <!-- Add data attributes to store book ID and toggle the modal -->
-                                            <button class="btn btn-danger delete-btn" data-toggle="modal" data-target="#deleteModal<?= $book['book_id'] ?>" data-book-id="<?= $book['book_id'] ?>">Delete</button>
-                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -57,29 +48,5 @@
         </div>
     </div>
 </div>
-
-<!-- Modal -->
-<?php foreach ($books as $book) : ?>
-    <div class="modal fade" id="deleteModal<?= $book['book_id'] ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Delete Confirmation</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete this book?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <!-- Change the href attribute to the appropriate delete URL -->
-                    <a href="<?= base_url("book/delete/{$book['book_id']}") ?>" class="btn btn-danger">Delete</a>
-                </div>
-            </div>
-        </div>
-    </div>
-<?php endforeach ?>
 
 <?= $this->endSection()  ?>

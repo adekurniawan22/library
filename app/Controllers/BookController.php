@@ -19,9 +19,15 @@ class BookController extends BaseController
 
     public function index()
     {
-        return view('book/index', [
-            'books' => $this->bookModel->findAll(),
-        ]);
+        if (session()->get('role_id') == 3) {
+            return view('book/member/index', [
+                'books' => $this->bookModel->findAll(),
+            ]);
+        } else {
+            return view('book/index', [
+                'books' => $this->bookModel->findAll(),
+            ]);
+        }
     }
 
     public function create()
@@ -76,7 +82,7 @@ class BookController extends BaseController
         $this->validation->setRule('book_stock', 'Stock', 'required');
 
         if (!$this->validate($this->validation->getRules())) {
-            return $this->create();
+            return $this->update($id);
         } else {
             $data = [
                 'book_title' => $this->request->getVar('book_title'),

@@ -22,21 +22,34 @@ class UserController extends BaseController
 
     public function index()
     {
-        $users = $this->userModel->join('role', 'role.role_id = user.role_id')
-            ->select('user.*, role.role')
-            ->findAll();
-
-        return view('user/index', [
-            'users' => $users,
-        ]);
+        if (session()->get('role_id') == 2) {
+            return view('user/librarian/index', [
+                'users' => $this->userModel->join('role', 'role.role_id = user.role_id')
+                    ->select('user.*, role.role')
+                    ->where('user.role_id = ', 3)
+                    ->findAll(),
+            ]);
+        } else {
+            return view('user/index', [
+                'users' => $this->userModel->join('role', 'role.role_id = user.role_id')
+                    ->select('user.*, role.role')
+                    ->findAll(),
+            ]);
+        }
     }
 
     public function create()
     {
-        return view('user/add', [
-            'validation' => $this->validation,
-            'roles' => $this->roleModel->findAll()
-        ]);
+        if (session()->get('role_id') == 2) {
+            return view('user/librarian/add', [
+                'validation' => $this->validation,
+            ]);
+        } else {
+            return view('user/add', [
+                'validation' => $this->validation,
+                'roles' => $this->roleModel->findAll()
+            ]);
+        }
     }
 
     public function store()
@@ -52,7 +65,7 @@ class UserController extends BaseController
             return $this->create();
         } else {
             $data = [
-                'role_id' => $this->request->getVar('role_id'),
+                'role_id' => (session()->get('role_id') == 2) ? 3 : $this->request->getVar('role_id'),
                 'email' => $this->request->getVar('email'),
                 'password' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT),
                 'full_name' => $this->request->getVar('full_name'),
@@ -68,11 +81,18 @@ class UserController extends BaseController
     public function update($id)
     {
         $user = $this->userModel->find($id);
-        return view('user/edit', [
-            'user' => $user,
-            'roles' => $this->roleModel->findAll(),
-            'validation' => $this->validation,
-        ]);
+        if (session()->get('role_id') == 2) {
+            return view('user/librarian/edit', [
+                'user' => $user,
+                'validation' => $this->validation,
+            ]);
+        } else {
+            return view('user/edit', [
+                'user' => $user,
+                'roles' => $this->roleModel->findAll(),
+                'validation' => $this->validation,
+            ]);
+        }
     }
 
     public function save($id)
@@ -92,7 +112,7 @@ class UserController extends BaseController
         }
 
         if (!$this->validate($this->validation->getRules())) {
-            return $this->create();
+            return $this->update($id);
         } else {
             $data = [
                 'role_id' => $this->request->getVar('role_id'),
