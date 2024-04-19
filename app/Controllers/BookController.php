@@ -58,7 +58,11 @@ class BookController extends BaseController
                 'book_stock' => $this->request->getVar('book_stock'),
             ];
 
-            $this->bookModel->save($data);
+            if ($this->bookModel->save($data)) {
+                session()->setFlashdata('success', 'Success to add new book');
+            } else {
+                session()->setFlashdata('error', 'Failed to add new book');
+            }
             return redirect()->to('/book');
         }
     }
@@ -93,14 +97,22 @@ class BookController extends BaseController
                 'book_stock' => $this->request->getVar('book_stock'),
             ];
 
-            $this->bookModel->update($id, $data);
+            if ($this->bookModel->update($id, $data)) {
+                session()->setFlashdata('success', 'Success to edit book');
+            } else {
+                session()->setFlashdata('error', 'Failed to edit book');
+            }
             return redirect()->to('/book');
         }
     }
 
     public function delete($id)
     {
-        $this->bookModel->delete($id);
+        if ($this->bookModel->delete($id)) {
+            session()->setFlashdata('success', 'Success to delete book');
+        } else {
+            session()->setFlashdata('error', 'Failed to delete book');
+        }
         return redirect()->to('/book');
     }
 }

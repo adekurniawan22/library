@@ -45,9 +45,9 @@ class BorrowingController extends BaseController
             // dd($daysDiff);
 
             // Jika melebihi 2 minggu, atur denda
-            if ($daysDiff > 14) {
-                $daysLate = $daysDiff - 13; // Hitung hari terlambat setelah 2 minggu
-                $penalty = $daysLate * 100; // Hitung denda per hari (misalnya, 100 per hari)
+            if ($daysDiff > 7) {
+                $daysLate = $daysDiff - 6; // Hitung hari terlambat setelah 2 minggu
+                $penalty = $daysLate * 1000; // Hitung denda per hari (misalnya, 1000 per hari)
 
                 $borrowing['penalty'] = $penalty; // Set nilai denda
             } else {
@@ -61,13 +61,11 @@ class BorrowingController extends BaseController
         ]);
     }
 
-
-
     public function create()
     {
         return view('borrowing/add', [
             'validation' => $this->validation,
-            'books' => $this->bookModel->findAll(),
+            'books' => $this->bookModel->where("book_stock >", 0)->findAll(),
             'users' => $this->userModel->where('role_id =', 3)->findAll(),
         ]);
     }
@@ -97,8 +95,11 @@ class BorrowingController extends BaseController
                 // Update book stock
                 $this->bookModel->where('book_id', $bookId)->set('book_stock', 'book_stock - 1', FALSE)->update();
 
-                // Save borrowing data
-                $this->borrowingModel->save($data);
+                if ($this->borrowingModel->save($data)) {
+                    session()->setFlashdata('success', 'Success to add borrowing');
+                } else {
+                    session()->setFlashdata('error', 'Failed to add borrowing');
+                }
             }
 
             // Redirect to borrowing page after successful storage
@@ -141,8 +142,11 @@ class BorrowingController extends BaseController
                 $this->bookModel->where('book_id', $borrowing['book_id'])->set('book_stock', 'book_stock - 1', FALSE)->update();
             }
 
-            // Perbarui data peminjaman
-            $this->borrowingModel->update($id, $data);
+            if ($this->borrowingModel->update($id, $data)) {
+                session()->setFlashdata('success', 'Success to edit borrowing');
+            } else {
+                session()->setFlashdata('error', 'Failed to edit borrowing');
+            }
 
             return redirect()->to('/borrowing');
         }
@@ -156,7 +160,13 @@ class BorrowingController extends BaseController
         if ($borrowing['is_return'] == 0) {
             $this->bookModel->where('book_id', $borrowing['book_id'])->set('book_stock', 'book_stock + 1', FALSE)->update();
         }
-        $this->borrowingModel->delete($id);
+
+        if ($this->borrowingModel->delete($id)) {
+            session()->setFlashdata('success', 'Success to delete borrowing');
+        } else {
+            session()->setFlashdata('error', 'Failed to delete borrowing');
+        }
+
         return redirect()->to('/borrowing');
     }
 }

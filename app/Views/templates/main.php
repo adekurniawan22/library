@@ -30,12 +30,12 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <span class="sidebar-brand d-flex align-items-center justify-content-center">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3 text-left">Sistem Perpustakaan</div>
-            </a>
+            </span>
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
@@ -185,6 +185,33 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
+    <!-- Message Modal -->
+    <?php if (session()->has('success') || session()->has('error')) { ?>
+        <div class="modal fade" id="message" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header text-light <?php echo session()->has('success') ? 'bg-success' : 'bg-danger'; ?>">
+                        <h5 class="modal-title" id="exampleModalLabel">Message</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <?php
+                        if (session()->has('success')) {
+                            echo session()->getFlashdata('success');
+                            echo "<span class='ml-1 fa fa-check-circle'></span>";
+                        } else {
+                            echo session()->getFlashdata('error');
+                            echo "<span class='ml-1 fa fa-info-circle'></span>";
+                        }
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php } ?>
+
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -227,6 +254,14 @@
 
     <!-- Page level custom scripts -->
     <script src="<?= base_url() ?>/sb-admin-2/js/demo/datatables-demo.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#message').modal('show');
+            setTimeout(function() {
+                $('#message').modal('hide');
+            }, 4000); // Menutup modal setelah 5 detik
+        });
+    </script>
 
 </body>
 

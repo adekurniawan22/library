@@ -73,7 +73,11 @@ class UserController extends BaseController
                 'mobile' => $this->request->getVar('mobile'),
             ];
 
-            $this->userModel->save($data);
+            if ($this->userModel->save($data)) {
+                session()->setFlashdata('success', 'Success to add user');
+            } else {
+                session()->setFlashdata('error', 'Failed to add user');
+            }
             return redirect()->to('/user');
         }
     }
@@ -126,14 +130,22 @@ class UserController extends BaseController
                 $data['password'] = password_hash($this->request->getVar('password'), PASSWORD_DEFAULT);
             }
 
-            $this->userModel->update($id, $data);
+            if ($this->userModel->update($id, $data)) {
+                session()->setFlashdata('success', 'Success to edit user');
+            } else {
+                session()->setFlashdata('error', 'Failed to edit user');
+            }
             return redirect()->to('/user');
         }
     }
 
     public function delete($id)
     {
-        $this->userModel->delete($id);
+        if ($this->userModel->delete($id)) {
+            session()->setFlashdata('success', 'Success to delete user');
+        } else {
+            session()->setFlashdata('error', 'Failed to delete user');
+        }
         return redirect()->to('/user');
     }
 }

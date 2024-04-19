@@ -45,9 +45,9 @@ class HistoryController extends BaseController
             // dd($daysDiff);
 
             // Jika melebihi 2 minggu, atur denda
-            if ($daysDiff > 14) {
-                $daysLate = $daysDiff - 13; // Hitung hari terlambat setelah 2 minggu
-                $penalty = $daysLate * 100; // Hitung denda per hari (misalnya, 100 per hari)
+            if ($daysDiff > 7) {
+                $daysLate = $daysDiff - 6; // Hitung hari terlambat setelah 2 minggu
+                $penalty = $daysLate * 1000; // Hitung denda per hari (misalnya, 100 per hari)
 
                 $borrowing['penalty'] = $penalty; // Set nilai denda
             } else {

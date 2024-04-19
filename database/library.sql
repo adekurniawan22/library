@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 16 Apr 2024 pada 06.25
--- Versi server: 10.4.28-MariaDB
--- Versi PHP: 8.2.4
+-- Generation Time: Apr 16, 2024 at 03:19 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `book`
+-- Table structure for table `book`
 --
 
 CREATE TABLE `book` (
@@ -38,18 +38,18 @@ CREATE TABLE `book` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `book`
+-- Dumping data for table `book`
 --
 
 INSERT INTO `book` (`book_id`, `book_title`, `book_author`, `book_publisher`, `book_publication_year`, `book_pages`, `book_stock`) VALUES
-(1, 'Aperiam quidem amet edit', 'Molestiae anim paria', 'Iste cumque qui obca', '1989', 45, 15),
-(3, 'Molestias consequat', 'Qui magni sunt quid', 'Placeat incidunt v', '2007', 86, 12),
+(1, 'Aperiam quidem amet', 'Molestiae anim paria', 'Iste cumque qui obca', '1989', 45, 16),
+(3, 'Molestias consequat', 'Qui magni sunt quid', 'Placeat incidunt v', '2007', 86, 11),
 (6, 'Ut tempora expedita ', 'Est commodo quis pr', 'Ut velit sed in cum', '2017', 33, 35);
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `borrowing`
+-- Table structure for table `borrowing`
 --
 
 CREATE TABLE `borrowing` (
@@ -61,10 +61,17 @@ CREATE TABLE `borrowing` (
   `is_return` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `borrowing`
+--
+
+INSERT INTO `borrowing` (`borrowing_id`, `user_id`, `book_id`, `borrowing_date`, `return_date`, `is_return`) VALUES
+(10, 3, 3, '2024-04-16 00:00:00', NULL, 0);
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `role`
+-- Table structure for table `role`
 --
 
 CREATE TABLE `role` (
@@ -73,7 +80,7 @@ CREATE TABLE `role` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `role`
+-- Dumping data for table `role`
 --
 
 INSERT INTO `role` (`role_id`, `role`) VALUES
@@ -84,7 +91,7 @@ INSERT INTO `role` (`role_id`, `role`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `user`
+-- Table structure for table `user`
 --
 
 CREATE TABLE `user` (
@@ -98,7 +105,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `user`
+-- Dumping data for table `user`
 --
 
 INSERT INTO `user` (`user_id`, `role_id`, `email`, `password`, `full_name`, `address`, `mobile`) VALUES
@@ -111,64 +118,73 @@ INSERT INTO `user` (`user_id`, `role_id`, `email`, `password`, `full_name`, `add
 --
 
 --
--- Indeks untuk tabel `book`
+-- Indexes for table `book`
 --
 ALTER TABLE `book`
   ADD PRIMARY KEY (`book_id`);
 
 --
--- Indeks untuk tabel `borrowing`
+-- Indexes for table `borrowing`
 --
 ALTER TABLE `borrowing`
-  ADD PRIMARY KEY (`borrowing_id`);
+  ADD PRIMARY KEY (`borrowing_id`),
+  ADD KEY `book_id` (`book_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
--- Indeks untuk tabel `role`
+-- Indexes for table `role`
 --
 ALTER TABLE `role`
   ADD PRIMARY KEY (`role_id`);
 
 --
--- Indeks untuk tabel `user`
+-- Indexes for table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`user_id`),
   ADD KEY `role_id` (`role_id`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `book`
+-- AUTO_INCREMENT for table `book`
 --
 ALTER TABLE `book`
   MODIFY `book_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT untuk tabel `borrowing`
+-- AUTO_INCREMENT for table `borrowing`
 --
 ALTER TABLE `borrowing`
-  MODIFY `borrowing_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `borrowing_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT untuk tabel `role`
+-- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
   MODIFY `role_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT untuk tabel `user`
+-- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+-- Constraints for dumped tables
 --
 
 --
--- Ketidakleluasaan untuk tabel `user`
+-- Constraints for table `borrowing`
+--
+ALTER TABLE `borrowing`
+  ADD CONSTRAINT `borrowing_ibfk_1` FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`),
+  ADD CONSTRAINT `borrowing_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
+
+--
+-- Constraints for table `user`
 --
 ALTER TABLE `user`
   ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`);

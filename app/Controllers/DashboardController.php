@@ -20,7 +20,7 @@ class DashboardController extends BaseController
         return view('dashboard/index', [
             'totalBooks' => $bookModel->countAllResults(),
             'totalUsers' => (session()->get('role_id') == 2) ? $userModel->where('role_id', 3)->countAllResults() : $userModel->countAllResults(),
-            'totalLoanPenalties' => $borrowingModel->where('borrowing_date <', date('Y-m-d'))->countAllResults(),
+            'totalLoanPenalties' => $borrowingModel->where('borrowing_date <', date('Y-m-d'))->where("is_return",0)->countAllResults(),
         ]);
     }
 }

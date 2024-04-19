@@ -47,10 +47,13 @@ class AuthController extends BaseController
 
                 switch ($user['role_id']) {
                     case 1:
+                        session()->setFlashdata('success', 'Welcome back to dashboard, ' . $user["full_name"]);
                         return redirect()->to('dashboard');
                     case 2:
+                        session()->setFlashdata('success', 'Welcome back to dashboard, ' . $user["full_name"]);
                         return redirect()->to('dashboard');
                     case 3:
+                        session()->setFlashdata('success', 'Welcome Back, ' . $user["full_name"]);
                         return redirect()->to('book');
                     default:
                         return redirect()->to('/');
